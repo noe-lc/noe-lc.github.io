@@ -16,16 +16,16 @@ function addLayer() {
 
     const dayScale = d3.scaleLinear()
       .domain([0,86400]) // seconds in 24hrs
-      .range([0,5000]) //ms
+      .rangeRound([0,10000]) //ms
     
-    const getDiffInSeconds = (open,close) => {
+    const getOpenHoursInSeconds = (open,close) => {
       [close,open] = [close,open].map(t => {
         let index = t.indexOf(':'),
           hours = +t.slice(0,index),
           mins = +t.slice(index + 1);
         return (hours * 60 * 60) + (mins * 60);
       });
-      return close - open;
+      return { open, close };
     };
 
     collection.features.forEach(f => {
@@ -35,7 +35,8 @@ function addLayer() {
         let value = open_hours[key][0] || [];
         let [open,close] = value;
         f.properties.open_hours[key] = value || [];
-        f.properties[key] = value.length == 0 ? 0 : getDiffInSeconds(open,close);
+        f.properties[key] = value.length == 0 ? 
+          { open: 0, close: 0} : getOpenHoursInSeconds(open,close);
       }
     });
     
@@ -63,7 +64,21 @@ function addLayer() {
 
     allOthers = polygons.filter(d => !idsToDiscard.includes(d.properties.fid));
 
-    console.log(Math.min(...allOthers.data().map(f => f.properties.seconds_per_week)));
+    let dayIndex = 0;
+    function iterateDays() {
+      let dayName = dayNames[dayIndex];
+      const transition = d3.transition('day');
+      allOthers.transition(transition)
+        .delay(d => dayScale(d.properties[dayName].open))
+        .duration(d => dayScale(d.properties[dayName].close - d.properties[dayName].open))
+        .styleTween('fill',() => interpolator)
+      
+      transition.on('end',()=> console.log('end'));
+      
+    };
+
+    iterateDays();
+    
 
     //polygons
     //  .style('fill','#CCC')
