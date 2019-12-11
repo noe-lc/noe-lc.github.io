@@ -63,21 +63,27 @@ function addLayer() {
     noOpenHours.style('fill','#bababa');
 
     allOthers = polygons.filter(d => !idsToDiscard.includes(d.properties.fid));
-
-    let dayIndex = 0;
-    function iterateDays() {
-      let dayName = dayNames[dayIndex];
-      const transition = d3.transition('day');
-      allOthers.transition(transition)
-        .delay(d => dayScale(d.properties[dayName].open))
-        .duration(d => dayScale(d.properties[dayName].close - d.properties[dayName].open))
+    
+    function dayTransition(day) {
+      allOthers.transition()
+        .delay(d => dayScale(d.properties[day].open))
+        .duration(d => dayScale(d.properties[day].close - d.properties[day].open))
         .styleTween('fill',() => interpolator)
-      
-      transition.on('end',()=> console.log('end'));
-      
     };
 
-    iterateDays();
+    let index = 0;
+    window.dayInterval = setInterval(() => {
+      let dayName = dayNames[index];
+      if(!dayName){
+        clearInterval(window.dayInterval);
+        index = 0;
+        return;
+      }
+      dayTransition(dayNames[index]);
+      index += 1;
+    },dayScale.range()[1]);
+    
+    
     
 
     //polygons
