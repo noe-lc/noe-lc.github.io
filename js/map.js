@@ -1,11 +1,13 @@
 const pathGenerator = d3.geoPath()
-  .projection(d3.geoMercator());
+  .projection(d3.geoMercator().angle(29));
 
 
 function addLayer() {
-  d3.json('./data/manhattan.json').then((data) => {
+  d3.json('./data/manhattan.json').then(async (data) => {
+    let index = 0;
     let fitHeight, polygons;
     let alwaysOpen, allOthers, noOpenHours;
+    const coastlines = await d3.json('./data/manhattan_polygon.geojson');
     const collection = topojson.feature(data,data.objects.manhattan),
       svg = d3.select('svg#map'),
       g = svg.append('g'),
@@ -36,16 +38,28 @@ function addLayer() {
         let [open,close] = value;
         f.properties.open_hours[key] = value || [];
         f.properties[key] = value.length == 0 ? 
-          { open: 0, close: 0} : getOpenHoursInSeconds(open,close);
+          { open: 0, close: 0 } : getOpenHoursInSeconds(open,close);
       }
     });
     
-    pathGenerator.projection(pathProjection.fitWidth(1100,collection));
+    pathGenerator.projection(pathProjection.fitWidth(document.body.clientWidth,collection));
+
+    svg.style('background-color','#c0cdd7');
 
     g.selectAll('path').data(collection.features)
       .enter().append('path')
         .attr('class','polygon')
         .attr('d',pathGenerator);
+    
+    g.selectAll('path.coastline').data(coastlines.features)
+      .enter()
+      .append('path')
+        .attr('class','coastline')
+        .attr('d',pathGenerator)
+        .lower()
+        .clone()
+          .attr('class','bold-coastline');
+
 
     fitHeight = g.node().getBBox().height;
     svg.style('height',Math.ceil(fitHeight));
@@ -59,11 +73,13 @@ function addLayer() {
       ...noOpenHours.data().map(f => f.properties.fid)
     ];
 
-    alwaysOpen.style('fill','#ff7e56');
-    noOpenHours.style('fill','#bababa');
-
     allOthers = polygons.filter(d => !idsToDiscard.includes(d.properties.fid));
     
+    alwaysOpen
+      .style('fill','#61b864');
+    noOpenHours
+      .style('fill','#cccccc');
+
     function dayTransition(day) {
       allOthers.transition()
         .delay(d => dayScale(d.properties[day].open))
@@ -71,29 +87,41 @@ function addLayer() {
         .styleTween('fill',() => interpolator)
     };
 
-    let index = 0;
-    window.dayInterval = setInterval(() => {
-      let dayName = dayNames[index];
-      if(!dayName){
-        clearInterval(window.dayInterval);
-        index = 0;
-        return;
-      }
-      dayTransition(dayNames[index]);
-      index += 1;
-    },dayScale.range()[1]);
+    
+    //window.dayInterval = setInterval(() => {
+    //  let dayName = dayNames[index];
+    //  if(!dayName){
+    //    clearInterval(window.dayInterval);
+    //    index = 0;
+    //    return;
+    //  }
+    //  dayTransition(dayNames[index]);
+    //  index += 1;
+    //},dayScale.range()[1]);
     
     
+    //function runTransition() {
+    //  circles.transition()
+    //    .on('start',function repeat(d) {
+    //      d.index = !isNaN(d.index) ? d.index += 1 : 0;
+    //      let prop = props[d.index];
+    //    
+    //      if(d.index > props.length - 1) {
+    //        d.index = 0;
+    //        return;
+    //      }
+    //    
+    //      d3.active(this).transition()
+    //        .delay(d => scale(d[prop].start))
+    //        .duration(d => scale(d[prop].end) - scale(d[prop].start))
+    //        .styleTween('fill',() => interpolator)
+    //      .transition()
+    //        .delay(d => totalTime - scale(d[prop].end ))
+    //        .on('start',repeat);
+    //    });
+    //    
+    //};
     
-
-    //polygons
-    //  .style('fill','#CCC')
-    //  .transition()
-    //    .delay(3000)
-    //    .duration(2000)
-    //    .style('fill',d => `rgb(${randomRgb()},${randomRgb()},${randomRgb()})`);
-
-    //g.call(d3.zoom().on('zoom',() => zoom(g)));
     
   });
 };

@@ -6,8 +6,8 @@ html, body {
 }
 
 .wrapper {
-  width: 1100px;
-  height: 100%;
+  width: 100%;
+  height: auto;
   margin: 0 auto;
 }
 
@@ -24,5 +24,19 @@ path.polygon {
   fill: none;
   stroke-width: 0.05px;
   stroke: black;
+}
+
+path.coastline {
+  fill: #f0f0f0;
+  stroke-width: 0.25px;
+  stroke: black;
+  stroke-opacity: 0.25;
+}
+
+path.bold-coastline {
+  fill: none;
+  stroke-width: 5px;
+  stroke: #0086ff;
+  stroke-opacity: 0.09;
 }
 
