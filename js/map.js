@@ -58,7 +58,8 @@ function addLayer() {
         .attr('d',pathGenerator)
         .lower()
         .clone()
-          .attr('class','bold-coastline');
+          .attr('class','bold-coastline')
+          .lower();
 
 
     fitHeight = g.node().getBBox().height;
@@ -82,9 +83,11 @@ function addLayer() {
 
     function dayTransition(day) {
       allOthers.transition()
+        .style('fill','black')
         .delay(d => dayScale(d.properties[day].open))
         .duration(d => dayScale(d.properties[day].close - d.properties[day].open))
         .styleTween('fill',() => interpolator)
+        .style('stroke','white');
     };
 
     
