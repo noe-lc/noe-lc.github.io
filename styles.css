@@ -3,12 +3,49 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Muli', sans-serif;
 }
 
-.wrapper {
+#wrapper {
   width: 100%;
   height: auto;
   margin: 0 auto;
+  position: relative;
+}
+
+h1 {
+  font-size: 28px;
+  position: absolute;
+  top: 0;
+  padding-left: 15px;
+  text-shadow: 1px 1px 1px white;
+}
+
+#controller {
+  width: 200px;
+  height: auto;
+  position: fixed;
+  top: 50px;
+  left: 15px;
+  font-size: 12px;
+  border-left: 1px solid rgb(0,0,0,0.5);
+  padding-left: 10px;
+}
+
+#controller h4,p {
+  margin: 0;
+}
+
+p.day-selector {
+  text-shadow: 
+    -1px -1px 5px rgba(255,255,255,.1), 
+     1px 1px 2px rgba(0,0,0,.5);
+  cursor: pointer;
+}
+
+p.day-selector:active {
+  position: relative;
+  top: 1px;
 }
 
 h1,h2{
@@ -38,5 +75,54 @@ path.bold-coastline {
   stroke-width: 5px;
   stroke: #0086ff;
   stroke-opacity: 0.09;
+}
+
+#legend {
+  min-width: 100px;
+  position: absolute;
+  bottom: 125px;
+  right: 100px;
+}
+
+.ramp-container {
+  width: 20px;
+  height: 250px;
+  display: block;
+  position: relative;
+}
+
+.ramp-container img {
+  width: 100%;
+  height: 100%;
+}
+
+.ramp-container .indicator {
+  min-width: 50px;
+  font-size: 6px;
+  position: absolute;
+  left: 25px;
+  margin: 0;
+}
+
+.class-row {
+  height: 20px;
+  line-height: 20px;
+  margin: 5px 0px;
+}
+
+.patch {
+  width: 20px;
+  height: 20px;
+  border: 0.5px solid rgb(0,0,0,0.75);
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.description {
+  font-size: 8px;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0px;
+  margin-left: 5px;
 }
 

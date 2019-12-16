@@ -5,20 +5,23 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles.css" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
   </head>
   <body>
     <!--<h1>A Peek Into NYC's Opening Hours</h1> -->
-    <div class="wrapper">
-      <svg id="map">
-      
-      </svg>
+    <div id="wrapper">
+      <h1>Business Opening Hours in Manhattan</h1>
+      <div id="controller">
+        <h4>Choose a day of the week:</h4>
+      </div>
+      <svg id="map"></svg>
     </div>
       
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://unpkg.com/topojson@3"></script>
     <script src="js/map.js"></script>
     <script>
-      addLayer();
+      initializeMap();
     </script>
   </body>
 </html>

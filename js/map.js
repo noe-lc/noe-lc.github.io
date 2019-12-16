@@ -1,8 +1,7 @@
 const pathGenerator = d3.geoPath()
-  .projection(d3.geoMercator().angle(29));
+  .projection(d3.geoMercator()/*.angle(29)*/);
 
-
-function addLayer() {
+function initializeMap() {
   d3.json('./data/manhattan.json').then(async (data) => {
     let index = 0;
     let fitHeight, polygons;
@@ -14,7 +13,15 @@ function addLayer() {
       pathProjection = pathGenerator.projection(),
       openingColor = d3.color('rgb(249, 249, 134)'),
       interpolator = d3.piecewise(d3.interpolateRgb.gamma(1), [openingColor, 'orange', 'purple']),
-      dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      dayNameMap = {
+        Mon: 'Monday',
+        Tue: 'Tuesday',
+        Wed: 'Wednesday',
+        Thu: 'Thursday',
+        Fri: 'Friday',
+        Sat: 'Saturday',
+        Sun: 'Sunday'
+      };
 
     const dayScale = d3.scaleLinear()
       .domain([0,86400]) // seconds in 24hrs
@@ -46,6 +53,12 @@ function addLayer() {
 
     svg.style('background-color','#c0cdd7');
 
+    d3.select('div#controller').selectAll('p').data(Object.entries(dayNameMap)).enter()
+      .append('p')
+      .attr('class','day-selector')
+      .text(d => d[1])
+      .on('click',d => dayTransition(d[0]));
+
     g.selectAll('path').data(collection.features)
       .enter().append('path')
         .attr('class','polygon')
@@ -65,6 +78,35 @@ function addLayer() {
     fitHeight = g.node().getBBox().height;
     svg.style('height',Math.ceil(fitHeight));
 
+    const legend = d3.select('div#wrapper').append('div')
+      .attr('id','legend');
+    const ramp = legend.append('div')
+      .attr('class','ramp-container');
+    ramp.append('img')
+      .attr('src','imgs/color-ramp.png');
+    ramp.append('h6')
+      .attr('class','indicator')
+      .style('top','-3px')
+      .text('-Closed');
+    ramp.append('h6')
+      .attr('class','indicator')
+      .style('top','245px')
+      .text('-Just opened');
+    
+    const classes = legend.selectAll('.class').data(
+      [{ color: '#61b864', text: 'Open 24hrs' },{ color: '#cccccc', text: 'No Data' }]
+    )
+      .enter().append('div')
+        .attr('class','class-row');
+    classes.append('div')
+      .attr('class','patch')
+      .style('background-color',d => d.color);
+    classes.append('h6')
+      .attr('class','description')
+      .text(d => d.text);
+    
+    
+
     polygons = g.selectAll('path.polygon');
     alwaysOpen = polygons.filter(d => d.properties.seconds_per_week == 604800);
     noOpenHours = polygons.filter(d => !d.properties.open_hours);
@@ -82,6 +124,11 @@ function addLayer() {
       .style('fill','#cccccc');
 
     function dayTransition(day) {
+      allOthers.filter(d => d.properties[day].open == '0')
+        .style('fill',openingColor);
+      allOthers.filter(d => d.properties[day].open != '0')
+        .style('fill','purple');
+
       allOthers.transition()
         .style('fill','black')
         .delay(d => dayScale(d.properties[day].open))
@@ -90,6 +137,7 @@ function addLayer() {
         .style('stroke','white');
     };
 
+    //dayTransition('Thu');
     
     //window.dayInterval = setInterval(() => {
     //  let dayName = dayNames[index];
@@ -133,5 +181,3 @@ const zoom = (selection) => {
   console.log('d3.event.transform :', d3.event.transform);
   selection.attr('transform',d3.event.transform);
 };
-
-const randomRgb = () => Math.floor(Math.random() * 255);
