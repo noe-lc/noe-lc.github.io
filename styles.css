@@ -15,7 +15,7 @@ html, body {
 
 h1 {
   font-size: 28px;
-  position: absolute;
+  position: fixed;
   top: 0;
   padding-left: 15px;
   text-shadow: 1px 1px 1px white;
@@ -46,6 +46,24 @@ p.day-selector {
 p.day-selector:active {
   position: relative;
   top: 1px;
+}
+
+.legend {
+  height: 20px;
+  line-height: 20px;
+  margin: 2px 0px;
+}
+
+.legend-icon {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: text-bottom;
+  cursor: pointer;
+}
+
+.legend span {
+  margin-left: 2px;
 }
 
 h1,h2{
@@ -79,14 +97,15 @@ path.bold-coastline {
 
 #legend {
   min-width: 100px;
-  position: absolute;
-  bottom: 125px;
-  right: 100px;
+  /*position: absolute;
+  top: 125px;
+  left: 15px;*/
+  display: none;
 }
 
 .ramp-container {
   width: 20px;
-  height: 250px;
+  height: 200px;
   display: block;
   position: relative;
 }
@@ -126,3 +145,11 @@ path.bold-coastline {
   margin-left: 5px;
 }
 
+#map-description {
+  max-width: 400px;
+  position: absolute;
+  bottom: 10px;
+  right: 15px; 
+  font-size: 8px;
+  text-align: end;
+}

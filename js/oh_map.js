@@ -59,7 +59,6 @@ function initializeMap() {
       .attr('class','day-selector')
       .text(d => d[1])
       .on('click',d => dayTransition(d[0]));
-
     const showLegend = controller.append('div')
       .attr('class','legend')
       .on('click',() => { 
@@ -73,6 +72,7 @@ function initializeMap() {
     showLegend.append('span')
       .text('Show legend');
       
+
     g.selectAll('path').data(collection.features)
       .enter().append('path')
         .attr('class','polygon')
@@ -84,9 +84,10 @@ function initializeMap() {
         .attr('class','coastline')
         .attr('d',pathGenerator)
         .lower()
-      .clone()
-        .attr('class','bold-coastline')
-        .lower();
+        .clone()
+          .attr('class','bold-coastline')
+          .lower();
+
 
     fitHeight = g.node().getBBox().height;
     svg.style('height',Math.ceil(fitHeight));
@@ -118,6 +119,8 @@ function initializeMap() {
       .attr('class','description')
       .text(d => d.text);
     
+    
+
     polygons = g.selectAll('path.polygon');
     alwaysOpen = polygons.filter(d => d.properties.seconds_per_week == 604800);
     noOpenHours = polygons.filter(d => !d.properties.open_hours);
@@ -149,6 +152,48 @@ function initializeMap() {
         .styleTween('fill',() => interpolator)
         .style('stroke','white');
     };
-        
+
+    //dayTransition('Thu');
+    
+    //window.dayInterval = setInterval(() => {
+    //  let dayName = dayNames[index];
+    //  if(!dayName){
+    //    clearInterval(window.dayInterval);
+    //    index = 0;
+    //    return;
+    //  }
+    //  dayTransition(dayNames[index]);
+    //  index += 1;
+    //},dayScale.range()[1]);
+    
+    
+    //function runTransition() {
+    //  circles.transition()
+    //    .on('start',function repeat(d) {
+    //      d.index = !isNaN(d.index) ? d.index += 1 : 0;
+    //      let prop = props[d.index];
+    //    
+    //      if(d.index > props.length - 1) {
+    //        d.index = 0;
+    //        return;
+    //      }
+    //    
+    //      d3.active(this).transition()
+    //        .delay(d => scale(d[prop].start))
+    //        .duration(d => scale(d[prop].end) - scale(d[prop].start))
+    //        .styleTween('fill',() => interpolator)
+    //      .transition()
+    //        .delay(d => totalTime - scale(d[prop].end ))
+    //        .on('start',repeat);
+    //    });
+    //    
+    //};
+    
+    
   });
+};
+
+const zoom = (selection) => {
+  console.log('d3.event.transform :', d3.event.transform);
+  selection.attr('transform',d3.event.transform);
 };
