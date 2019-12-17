@@ -103,7 +103,7 @@ function initializeMap() {
       .text('-Closed');
     ramp.append('h6')
       .attr('class','indicator')
-      .style('top','195px')
+      .style('top','245px')
       .text('-Just opened');
     
     const classes = legend.selectAll('.class').data(
