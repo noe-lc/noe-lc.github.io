@@ -29,7 +29,7 @@ function initializeMap() {
     
     const getOpenHoursInSeconds = (open,close) => {
       [close,open] = [close,open].map(t => {
-        let index = t.indexOf(m,':'),
+        let index = t.indexOf(':'),
           hours = +t.slice(0,index),
           mins = +t.slice(index + 1);
         return (hours * 60 * 60) + (mins * 60);
