@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prueba de Mapping / Powerbeam</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/mapping-test.css" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="wrapper">
+      <input id="pac-input" class="controls" type="text" placeholder="Type in an address..." style="display: none;">
+      <h2>1. Geocodificación (Dirección a Coordenada)</h2>
+      <div id="map"></div>
+      <h2>2. Algoritmo de Dijkstra</h2>
+      <div id="graph">
+        <label for="json">Enter a valid JSON for a node graph below:</label>
+        <textarea id="json">
+          {
+            "A": {"B": 8, "C": 10},
+            "B": {"A": 8, "D": 11, "E": 11},
+            "C": {"A": 10, "D": 7, "E": 9},
+            "D": {"B": 11, "C": 7, "F": 9},
+            "E": {"B": 11, "C": 9, "F": 8},
+            "F": {"D": 9, "E": 8}
+          }
+        </textarea>
+        <label for="start" class="inline">Start node:</label>
+        <input type="text" id="start" class="text-input" value="A"/>
+        <label for="finish" class="inline">Finish node:</label>
+        <input type="text" id="finish" class="text-input" value="F"/>
+        <button onclick="run()">Find shortest path</button>
+        <span id="result"></span>
+      </div>
+    </div>
+    
+    <!--<script src="https://d3js.org/d3.v5.min.js" async defer></script>-->
+    <script src="../js/mapping-test.js"></script>
+    <script src="../js/classes.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHT2U4Z_FImMdHsAQvU9KSg8Z0YA-AUNw&libraries=places&callback=initMap" async defer></script>
+  </body>
+</html>
